@@ -1,0 +1,94 @@
+Python version - 3.11
+
+client ID - 4d04ff0f85694548bfbe51efbfa235a4
+client secret - 7e2227322ade4030bd788254e6e2b0f5
+
+Part-3 AWS notes
+1. create S3 bucket:
+    folders: {
+    raw_data --> to_processed, already_processed
+    transformed_data --> album_data, songs_data, artists_data}
+2. in Lamda:
+    a. create function - spotify_api_data_extract
+    b. set environment variable ( to do abstraction for client_ID and client_secret) -->
+       configuration--> env var
+3. write code in lamda function --> deploy --> test
+
+
+Error1: 
+{
+  "errorMessage": "Unable to import module 'lambda_function': No module named 'spotipy'",
+  "errorType": "Runtime.ImportModuleError",
+  "requestId": "8229fda3-ea0b-4af2-a7e2-57cc5a6ad4d3",
+  "stackTrace": []
+}
+
+solution: lambda doesn't support spotipy, so if we have to use external function, we need to use "Lamda_layer"
+    create new layer inside lambda, we have to manually upload spotipy to aws lambda, to use that. 
+spotipy = 2.23.1
+python = 3.11
+
+ERROR is solved now. 
+
+4. Dump entire Json file to S3:
+    Import boto3 -->> it is a package created by aws to programmitically link with aws services.
+
+
+Error2: Put_object access denied. 
+IAM role is not configured, as we are trying to access other aws service.
+
+goto configuration --> permission --> role --> add permission add policies --> Amazon S3 full access
+
+Error3: to remove time-out error.
+configuration --> general 
+
+now on deploying we will see json files in s3. 
+
+5. start transformations: 
+    a. create another lambda function - spotify_transformation_load_function
+
+6. last step to move data from to_processed folder to processed folder --> copy and then delete from to_processed. 
+
+7. add triggers to automate the process. 
+    a. goto function -- spotify_api_data_extract --> add trigger --> cloudwatch events --> create new rule (every_1_min)
+    b. add 2nd trigger on function -- spotify_transformation_load_function --> select S3 and bucket name
+
+8. goto AWS glue crawler to get the schema of data.
+9. we had our data installed to S3 bucket, now we have sql to read the files stored in our S3 bucket.
+
+
+Summary -
+
+Extracted the data from spotify onto the local PC, 
+then deployed the code onto AWS Lambda, added the trigger at every 1 min on function(spotify_api_data_extract),
+that will run this function and data gets stored on to_processed folder in S3.
+
+another trigger is added on function(spotify_transformation_load_function), so whenever the data comes you trigger the transformation function.
+then this 2nd function puts transformed data into different folders(album, artist, song) and also moves data from to_processed to processed folder.
+
+AWS Glue crawler will automatically detect that when new data arrives onto the catalog and then we can query the data on AWS Athen
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
