@@ -1,8 +1,3 @@
-Python version - 3.11
-
-client ID - 4d04ff0f85694548bfbe51efbfa235a4
-client secret - 7e2227322ade4030bd788254e6e2b0f5
-
 Part-3 AWS notes
 1. create S3 bucket:
     folders: {
@@ -59,14 +54,21 @@ now on deploying we will see json files in s3.
 
 Summary -
 
-Extracted the data from spotify onto the local PC, 
-then deployed the code onto AWS Lambda, added the trigger at every 1 min on function(spotify_api_data_extract),
-that will run this function and data gets stored on to_processed folder in S3.
+🔶 Extract
+1. Data Extraction from Spotify API using Python on local using Spotipy.
+2. Using AWS Lambda to deploy the extraction function - spotify_api_data_extract.
+3. Applied Cloud Watch to automate and run Triggers every 1 min.
+4. Stored the extracted raw data in S3 Bucket in to_processed folder.
 
-another trigger is added on function(spotify_transformation_load_function), so whenever the data comes you trigger the transformation function.
-then this 2nd function puts transformed data into different folders(album, artist, song) and also moves data from to_processed to processed folder.
+🔶 Transform
+1. Added S3 triggers when new data comes in bucket, whenever new data comes, it will 2nd function for further transformation. 
+2. Applied Data Transformation using AWS Lambda on function - spotify_transformation_load_function
+3. Storing the transformed data in S3 Bucket in different folders(Album, Artist, Song) and also moves data from to_processed to processed folder.
 
-AWS Glue crawler will automatically detect that when new data arrives onto the catalog and then we can query the data on AWS Athen
+🔶 Load
+1. Used Glue Crawler to infer schemas whenever there is new data in S3 Bucket.
+2. Create AWS Glue Data Catalog to manage the Metadata Repository.
+3. Use Amazon Athena to query and analyse the final dataset for desired information.
 
 
 
