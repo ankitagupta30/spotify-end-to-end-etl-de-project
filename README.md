@@ -1,9 +1,14 @@
 # Spotify End-to-End ETL DataEngineering Project
 
 ### Description
-In this project, we will build ETL (extract, Transform, Load) pipeline using the Spotify API on AWS. It will read data from Spotify API, transform into desired format and store into an AWS data store.
+In this project, we will build ETL (extract, Transform, Load) pipeline using the Spotify API on AWS. It will extract data from Spotify API about the top 50 global songs, transform into desired format and store into an AWS data store.
 
-Developed an ETL pipeline using the Spotify API and AWS services to extract data about the top 50 global songs, transform it to a desired format, and load it into AWS S3 buckets.
+### AWS Services used:
+- Lamda
+- S3 bucket
+- Cloudwatch
+- Glue
+- Athena
 
 ### The pipeline is divided into 3 parts:
 1. Extract
